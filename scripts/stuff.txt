@@ -1,1 +1,3 @@
 curl --request GET localhost:3000/events
+
+curl --request  POST  --data "id=smaura@me.com&name=press&type=weight&weight=45lbs&rep=10&sets=3"  localhost:3000/activity/create
