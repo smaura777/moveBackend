@@ -1,0 +1,44 @@
+html {
+	background-color:#8A2BE2;
+      height: 100%;
+      padding:0;
+}
+
+body {
+    font-family: "Helvetica Neue", arial, sans-serif;
+    font-size: 12px;
+    line-height: 12px;
+	padding: 0px;
+	margin: 0px;
+}
+
+body {
+    padding:0;
+    margin-top:0;
+    margin-bottom: 0;
+    background-color:#fff;
+	width:600px;
+	min-height: 400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+ul#main_menu_list {
+  list-style-type: none;
+  padding: 0px;
+  margin:0px;
+}
+
+ul#main_menu_list li {
+   display: inline;
+   font-weight: bold;
+}
+
+div.collection_setup {
+	padding: 10px 0 10px 0;
+	border-bottom: 1px solid #DDD;
+}
+
+div.collection_setup label {
+	margin-right: 50px;
+}

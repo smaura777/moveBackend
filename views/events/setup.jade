@@ -1,0 +1,16 @@
+extend main_layout 
+block structure
+
+ h1  #{title}
+ div.collection_setup
+   form(method='post',action='/events/setup',enctype='application/x-www-form-urlencoded')
+     input(type="hidden",name='collection_name',value='activities')
+     label(for='activities') activities
+     input(type='submit', name='activities', value='create') 
+
+ div.collection_setup  
+   form(method='post',action='/activity/collection/create',enctype='application/x-www-form-urlencoded')
+     input(type="hidden",name='collection_name',value='accounts')
+     label(for='accounts') accounts
+     input(type='submit', name='accounts', value='delete')
+ 
