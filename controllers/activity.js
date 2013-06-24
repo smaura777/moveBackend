@@ -4,16 +4,19 @@ var Db = require('mongodb').Db;
 
 exports.index = function(req,res){
     var util = require('util');
-    if (req.query.id !== undefined){
+    //if (req.query.id !== undefined){
     	console.log("User query for "+ req.query.id  );
     	 Db.connect("mongodb://localhost:27017/move_v001", function(err, db) {
  		 	var act = db.collection('activity');
- 		    act.find({id : ''+req.query.id+''}).toArray(function(err, items) {
+ 		    //act.find({id : ''+req.query.id+''}).toArray(function(err, items) {
+ 		     act.find().toArray(function(err, items) {
  		    	if (!err){
  		    	  // console.log( "content of result "+ require('util').inspect(items));
  		    	   console.log( "content of result "+ JSON.stringify(items));
- 		    	   
+ 		    	   console.log("Array length: "+ items.length)
+ 		    	   res.set('Content-Type','application/json'); 
  		    	   res.send(JSON.stringify(items));
+ 		    	  
  		    	}
  		    	else {
  		    	     console.log("fail mongo  query");
@@ -24,11 +27,11 @@ exports.index = function(req,res){
  		    });
  		 });    
  			 
-    }
-    else {
+    //}
+   /* else {
     	console.log("invalid  query");
     	res.send("request received - invalid ");
-    }
+    }*/
     
 	 
 };
@@ -106,18 +109,119 @@ exports.create = function(req,res){
 };
 
 exports.show = function(req,res){
-	 res.send("request received ");
+	 
+	 if ( req.route.params['id'] !== undefined){
+		console.log("Will delete activity with id " + req.route.params['id']);
+		
+		res.set('Content-Type','application/json');
+		//var errorMessage = {'status': 200, 'message': "Will display activity with id " + req.route.params['id']}; 
+		//res.send(errorMessage);
+		
+		 Db.connect("mongodb://localhost:27017/move_v001", function(err, db) {
+		 	 var acc = db.collection('activity');
+		 	  acc.find({"id":""+req.route.params['id']+""}).limit(1).toArray(function(err, items) {
+		 	 	if (!err){
+		 	 	   console.log( "content of result "+ JSON.stringify(items));
+ 		    	   console.log("Array length: "+ items.length)
+ 		    	   res.set('Content-Type','application/json'); 
+ 		    	   res.send(JSON.stringify(items));
+		 	 	}
+		 	 	else {
+		 	 		console.log("Could not display item ");
+		 	 	}
+		 	 	
+		 	 });
+		 });
+		
+		
+	}
+	else {
+		console.log("Missing ID in request");
+		res.set('Content-Type','application/json');
+		var errorMessage = {'status': 500, 'message':'Missing ID parameter in request'}; 
+		res.send(errorMessage);
+	}		
+
+	 
+
 };
 
+
+
 exports.destroy = function(req,res){  
-  res.send("request received ");
+    
+    console.log(" request id " +req.route.params['id']);
+     
+	if ( req.route.params['id'] !== undefined){
+		console.log("Will delete activity with id " + req.route.params['id']);
+		
+		res.set('Content-Type','application/json');
+		var errorMessage = {'status': 200, 'message': "Will delete activity with id " + req.route.params['id']}; 
+		res.send(errorMessage);
+		
+		 Db.connect("mongodb://localhost:27017/move_v001", function(err, db) {
+		 	 var acc = db.collection('activity');
+		 	 acc.remove({'id':""+req.route.params['id']+""},function(err,result){
+		 	 	if (!err){
+		 	 		console.log("Item deleted");
+		 	 	}
+		 	 	else {
+		 	 		console.log("Could not delete item ");
+		 	 	}
+		 	 	
+		 	 });
+		 });
+		
+		
+	}
+	else {
+		console.log("Missing ID in request");
+		res.set('Content-Type','application/json');
+		var errorMessage = {'status': 500, 'message':'Missing ID parameter in request'}; 
+		res.send(errorMessage);
+	}		
+
 };
 
 exports.edit = function(req,res){
-	 res.send("request received ");
+	 res.send("request to edit  received ");
 };
 
 exports.update = function(req,res){
-	 res.send("request received ");
+	 console.log(" request id " +req.route.params['id']);
+     
+	if ( (req.route.params['id'] !== undefined) &&
+	   (req.body.name !== undefined ) &&
+	    (req.body.type !== undefined)  ){
+	    
+		console.log("Will update activity with id " + req.route.params['id']);
+		
+		res.set('Content-Type','application/json');
+		var errorMessage = {'status': 200, 'message': "Will update activity with id " + req.route.params['id']}; 
+		res.send(errorMessage);
+		
+		 Db.connect("mongodb://localhost:27017/move_v001", function(err, db) {
+		 	 var acc = db.collection('activity');
+		 	 acc.update({'id':""+req.route.params['id']+""}, {$set: {'activity.name':""+req.body.name+"",'activity.type':""+req.body.type+""} },
+		 	  function(err,result){
+		 	 	if (!err){
+		 	 		console.log("Item updated");
+		 	 	}
+		 	 	else {
+		 	 		console.log("Could not update item ");
+		 	 	}
+		 	 	
+		 	 });
+		 });
+		
+		
+	}
+	else {
+		console.log("Missing ID in request");
+		res.set('Content-Type','application/json');
+		var errorMessage = {'status': 500, 'message':'Missing ID parameter in request'}; 
+		res.send(errorMessage);
+	}		
+
 };
 
