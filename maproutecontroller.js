@@ -10,7 +10,7 @@ exports.mapRoute = function(app,prefix){
 	app.del(prefix + '/removedb',prefixObj.destroyDB);
 	**/
 	
-	console.log("prefix " + prefix);
+	console.log("the prefix " + prefix);
 	
 	// index
 	app.get(prefix,prefixObj.index);

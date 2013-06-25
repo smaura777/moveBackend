@@ -3,6 +3,7 @@ var Db = require('mongodb').Db;
 
 
 exports.index = function(req,res){
+    console.log("activity list ....");
     var util = require('util');
     //if (req.query.id !== undefined){
     	console.log("User query for "+ req.query.id  );
@@ -38,6 +39,7 @@ exports.index = function(req,res){
 
 
 exports.indexJSON = function(req,res){
+    console.log("activity list ....JSON ");
    var response = [{'title': 'Hello JSON world', 'subtitle':'This is a subtitle', 'description':'This is a blog post'},
       {'title': 'Hello 2 JSON world', 'subtitle':'This is a subtitle', 'description':'This is a blog post'}
    ];
