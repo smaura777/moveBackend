@@ -199,7 +199,7 @@ exports.update = function(req,res){
 		res.set('Content-Type','application/json');
 		var updated_activity = {};
 	    updated_activity.name =  req.body.name;
-	    req.body.name.type = req.body.type;			
+	    updated_activity.type = req.body.type;			
 		
 		    if (req.body.weight !== undefined)
       			updated_activity.weight = req.body.weight;	
@@ -225,7 +225,7 @@ exports.update = function(req,res){
       		if (req.body.heart_rate !== undefined)
       			updated_activity.heart_rate = req.body.heart_rate;		
 	
-		
+		console.log(" Data to be Updated : \n\n  "+ require('util').inspect(updated_activity) );
 		 Db.connect("mongodb://localhost:27017/move_v001", function(err, db) {
 		 	 var acc = db.collection('activity');
 		 	 acc.update({'_id': ObjectID(req.route.params['id'])}, {$set: updated_activity},
