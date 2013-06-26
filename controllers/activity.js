@@ -5,8 +5,7 @@ var Db = require('mongodb').Db;
 exports.index = function(req,res){
     console.log("activity list ....");
     var util = require('util');
-    //if (req.query.id !== undefined){
-    	console.log("User query for "+ req.query.id  );
+    
     	 Db.connect("mongodb://localhost:27017/move_v001", function(err, db) {
  		 	var act = db.collection('activity');
  		    //act.find({id : ''+req.query.id+''}).toArray(function(err, items) {
@@ -28,11 +27,7 @@ exports.index = function(req,res){
  		    });
  		 });    
  			 
-    //}
-   /* else {
-    	console.log("invalid  query");
-    	res.send("request received - invalid ");
-    }*/
+   
     
 	 
 };
@@ -68,8 +63,7 @@ exports.create = function(req,res){
       		
       		
       		if (req.body.weight !== undefined)
-      			new_activity.weight = req.body.weight;
-      			
+      			new_activity.weight = req.body.weight;	
       			
       	    if (req.body.reps !== undefined)
       			new_activity.reps = req.body.reps;		
@@ -157,6 +151,7 @@ exports.show = function(req,res){
 exports.destroy = function(req,res){  
     
     console.log(" request id " +req.route.params['id']);
+    var  ObjectID = require('mongodb').ObjectID;
      
 	if ( req.route.params['id'] !== undefined){
 		console.log("Will delete activity with id " + req.route.params['id']);
@@ -167,7 +162,7 @@ exports.destroy = function(req,res){
 		
 		 Db.connect("mongodb://localhost:27017/move_v001", function(err, db) {
 		 	 var acc = db.collection('activity');
-		 	 acc.remove({'id':""+req.route.params['id']+""},function(err,result){
+		 	 acc.remove({'_id': ObjectID(req.route.params['id']) },function(err,result){
 		 	 	if (!err){
 		 	 		console.log("Item deleted");
 		 	 	}
@@ -195,26 +190,55 @@ exports.edit = function(req,res){
 
 exports.update = function(req,res){
 	 console.log(" request id " +req.route.params['id']);
+     var  ObjectID = require('mongodb').ObjectID;
      
 	if ( (req.route.params['id'] !== undefined) &&
 	   (req.body.name !== undefined ) &&
-	    (req.body.type !== undefined)  ){
-	    
+	    (req.body.type !== undefined)  ){    
 		console.log("Will update activity with id " + req.route.params['id']);
-		
 		res.set('Content-Type','application/json');
-		var errorMessage = {'status': 200, 'message': "Will update activity with id " + req.route.params['id']}; 
-		res.send(errorMessage);
+		var updated_activity = {};
+	    updated_activity.name =  req.body.name;
+	    req.body.name.type = req.body.type;			
+		
+		    if (req.body.weight !== undefined)
+      			updated_activity.weight = req.body.weight;	
+      			
+      	    if (req.body.reps !== undefined)
+      			updated_activity.reps = req.body.reps;		
+      		
+      		if (req.body.sets !== undefined)
+      			updated_activity.sets = req.body.sets;	
+      			
+      	     if (req.body.weight !== undefined)
+      			updated_activity.weight = req.body.weight;				
+      		
+      		if (req.body.distance !== undefined)
+      			updated_activity.distance = req.body.distance;		
+      		
+      		if (req.body.speed !== undefined)
+      			updated_activity.speed = req.body.speed;	
+      			
+      	    if (req.body.duration !== undefined)
+      			updated_activity.duration = req.body.duration;	
+      		
+      		if (req.body.heart_rate !== undefined)
+      			updated_activity.heart_rate = req.body.heart_rate;		
+	
 		
 		 Db.connect("mongodb://localhost:27017/move_v001", function(err, db) {
 		 	 var acc = db.collection('activity');
-		 	 acc.update({'id':""+req.route.params['id']+""}, {$set: {'activity.name':""+req.body.name+"",'activity.type':""+req.body.type+""} },
+		 	 acc.update({'_id': ObjectID(req.route.params['id'])}, {$set: updated_activity},
 		 	  function(err,result){
 		 	 	if (!err){
 		 	 		console.log("Item updated");
+					var successMessage = {'status': 200, 'message': "updated activity with id " + req.route.params['id']}; 
+					res.send(successMessage);
 		 	 	}
 		 	 	else {
 		 	 		console.log("Could not update item ");
+		 	 		var errorMessage = {'status': 500, 'message': "failed to update activity with id " + req.route.params['id']}; 
+					res.send(errorMessage);
 		 	 	}
 		 	 	
 		 	 });
